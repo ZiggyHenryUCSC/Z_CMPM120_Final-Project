@@ -273,13 +273,7 @@ class Platformer extends Phaser.Scene {
         this.shellGroup = this.add.group(this.shells);
         this.gravSpringGroup = this.add.group(this.gravSprings);
 
-        this.spawn = this.spawnGroup.getChildren()[0];
-        //console.log(this.spawn);
-        this.start = {
-            x: this.spawn.x,
-            y: this.spawn.y
-        };
-        console.log(this.spawn.x + ", " + this.spawn.y);
+        this.setSpawn(this.spawnGroup.getChildren()[0]);
 
         this.cursors = {};
         this.cursors.left = this.input.keyboard.addKey('A');
@@ -313,9 +307,11 @@ class Platformer extends Phaser.Scene {
         this.padGrabHeld = false;
         this.padSpinHeld = false;
 
+        //create player
         my.sprite.player = new Player(this, this.start.x, this.start.y, "platformer_characters", "tile_0000.png", this.cursors);
         my.sprite.player.setDepth(1);
         my.sprite.player.create();
+        my.sprite.player.flipX = true;
 
         this.physics.add.collider(my.sprite.player, this.groundLayer);
 
@@ -592,7 +588,7 @@ class Platformer extends Phaser.Scene {
         my.sprite.player.update(time, delta);
 
         if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
-            this.scene.restart();
+            this.deathFadeRespawn();
         }
     }
 
@@ -692,5 +688,14 @@ class Platformer extends Phaser.Scene {
         }
 
         return nearbyGravObjects[0];
+    }
+
+    setSpawn(spawn) {
+        this.spawn = spawn;
+
+        this.start = {
+            x: spawn.x,
+            y: spawn.y
+        }
     }
 }

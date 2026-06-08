@@ -41,10 +41,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.vfx.dashParticles = this.scene.add.particles(100, 100, 'square', {
             scale: 0.01,
 
-            speedY: -20,
-            alpha: { start: 0.75, end: 0 },
+            speedY: -25,
+            alpha: { start: 1, end: 0 },
+            alphaEase: 'out',
             quantity: 1,
-            lifespan: 1000,
+            lifespan: 700,
             frequency: 100,
 
             tint: 0x74d6bf,
