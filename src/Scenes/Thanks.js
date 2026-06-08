@@ -18,7 +18,7 @@ class Thanks extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
             //if not on credits screen already, continue text
             if (!this.onCredits) {
-                this.myText.setText(`Thanks for playing!\n\nMade by Ziggy Henry, Chloe Engel, and Aaron Kosoff\nForked by Ziggy Henry (check the pdf)\n\nPress SPACE to restart`);
+                this.myText.setText(`Thanks for playing!\n\nMade by Ziggy Henry, Chloe Engel*, and Aaron Kosoff*\n*Forked by Ziggy Henry (check the pdf)\n\nPress SPACE to restart`);
                 
                 this.onCredits = true;
             }

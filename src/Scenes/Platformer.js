@@ -83,6 +83,8 @@ class Platformer extends Phaser.Scene {
     }
 
     create() {
+        this.input.keyboard.addCapture('W,S,A,D,SPACE,K');
+
         this.createParticles();
 
         this.map = this.add.tilemap("test-platformer", 16, 16, 32, 16);
