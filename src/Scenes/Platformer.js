@@ -19,34 +19,66 @@ class Platformer extends Phaser.Scene {
     createParticles() {
         this.vfx = {};
 
-        this.vfx.coin = this.add.particles(0, 0, 'kenny-particles', {
-            frame: 'star_07.png',
+        this.vfx.coin = this.add.particles(0, 0, 'square', {
             speed: { min: 10, max: 50 },
-            scale: { start: 0.05, end: 0.025 },
-            alpha: { start: 1, end: 0 },
+            scale: { start: 0.02, end: 0.01 },
+            alpha: { start: 0.5, end: 0 },
             angle: { min: 0, max: 360 },
             lifespan: 2000,
             frequency: -1,
             quantity: 10,
             blendMode: 'NORMAL',
-        });
 
+            tintFill: true,
+            tint: 0xffe682
+        });
         this.vfx.coin.setDepth(3);
 
-        this.vfx.bgParticles = this.add.particles(0, 0, 'kenny-particles', {
-            frame: 'star_01.png',
+        this.vfx.dash = this.add.particles(0, 0, 'square', {
+            speed: { min: 10, max: 50 },
+            scale: { start: 0.02, end: 0.01 },
+            alpha: { start: 0.5, end: 0 },
+            angle: { min: 0, max: 360 },
+            lifespan: 2000,
+            frequency: -1,
+            quantity: 10,
+            blendMode: 'NORMAL',
+
+            tintFill: true,
+            tint: 0x74d6bf
+        });
+        this.vfx.dash.setDepth(3);
+
+        this.vfx.flag = this.add.particles(0, 0, 'square', {
+            speed: { min: 10, max: 50 },
+            scale: { start: 0.02, end: 0.01 },
+            alpha: { start: 0.5, end: 0 },
+            angle: { min: 0, max: 360 },
+            lifespan: 2000,
+            frequency: -1,
+            quantity: 500,
+            blendMode: 'NORMAL',
+
+            tintFill: true,
+            tint: 0xfc673a
+        });
+        this.vfx.flag.setDepth(1);
+
+        this.vfx.bgParticles = this.add.particles(0, 0, 'square', {
             speed: (Math.random() - 0.5) * 5,
             scaleX: { start: 2, end: 0.4 },
             scaleY: { start: 0.25, end: 0.05 },
-            alpha: { start: 1, end: 0 },
+            alpha: { start: 0.5, end: 0 },
             angle: { min: 0, max: 360 },
             rotation: { min: -360, max: 360 },
             quantity: 1,
             lifespan: 2000,
-            frequency: 100,
+            frequency: 300,
             blendMode: 'NORMAL',
-        });
 
+            tintFill: true,
+            tint: 0x1e1b38
+        });
         this.vfx.bgParticles.setDepth(-5);
     }
 
@@ -324,6 +356,10 @@ class Platformer extends Phaser.Scene {
 
         this.physics.add.overlap(my.sprite.player, this.coinGroup, (obj1, obj2) => {
             this.vfx.coin.emitParticleAt(obj2.x, obj2.y);
+
+            this.coinCount += 1;
+            this.coinUI.setText('Coins: ' + this.coinCount);
+
             obj2.destroy();
         });
 
@@ -332,10 +368,9 @@ class Platformer extends Phaser.Scene {
         });
 
         this.physics.add.overlap(my.sprite.player, this.spawnGroup, (obj1, obj2) => {
-            this.start = {
-                x: obj2.x,
-                y: obj2.y
-            };
+            if (this.spawn === obj2) return;
+
+            this.setSpawn(obj2);
         });
 
         // SPIKE DEATH WITH FADE
@@ -371,6 +406,7 @@ class Platformer extends Phaser.Scene {
             });
         });
 
+        //charge overlap
         this.physics.add.overlap(my.sprite.player, this.chargeGroup, (obj1, obj2) => {
             if (obj2.body.visible === false || my.sprite.player.isDash) return;
 
@@ -378,6 +414,8 @@ class Platformer extends Phaser.Scene {
             obj2.body.visible = false;
 
             obj2.alpha = 0.5;
+
+            this.vfx.dash.emitParticleAt(obj2.x, obj2.y);
 
             this.time.delayedCall(5000, () => {
                 obj2.body.visible = true;
@@ -497,8 +535,8 @@ class Platformer extends Phaser.Scene {
             }
         }, this);*/
 
-        this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-        this.cameras.main.startFollow(my.sprite.player, true, 0.25, 0.25, 0, 0);
+        this.cameras.main.setBounds(0, 0, this.map.widthInPixels * 200, this.map.heightInPixels);
+        this.cameras.main.startFollow(my.sprite.player, true, 0.25, 0.25);
         this.cameras.main.setDeadzone(50, 50);
         this.cameras.main.setZoom(this.SCALE);
 
@@ -522,6 +560,14 @@ class Platformer extends Phaser.Scene {
         });
 
         this.animatedTiles.init(this.map);
+
+        //ui
+        this.coinUI = this.add.text(config.width /2  - 225, config.height / 2 - 110, 'Coins: 0', 
+            { fontSize: '14px', fill: "#ffffff"});
+        this.coinUI.setScrollFactor(0);
+        this.coinUI.setDepth(50);
+
+        this.coinCount = 0;
     }
 
     update(time, delta) {
@@ -697,5 +743,7 @@ class Platformer extends Phaser.Scene {
             x: spawn.x,
             y: spawn.y
         }
+
+        this.vfx.flag.emitParticleAt(spawn.x, spawn.y);
     }
 }

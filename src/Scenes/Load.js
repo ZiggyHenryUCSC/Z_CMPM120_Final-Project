@@ -87,7 +87,9 @@ class Load extends Phaser.Scene {
         //};
 
          // ...and pass to the next Scene
-        this.scene.start("titleScene", {vfx: this.vfx});
+        this.scene.start("platformerScene", {vfx: this.vfx});
+        
+        //this.scene.start("titleScene", {vfx: this.vfx});
     }
 
     // Never get here since a new scene is started in create()
