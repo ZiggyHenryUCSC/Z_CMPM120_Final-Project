@@ -36,6 +36,10 @@ class Load extends Phaser.Scene {
         this.load.tilemapTiledJSON("tutorial", "tutorial.tmj");   // Tilemap in JSON
 
         this.load.multiatlas("kenny-particles", "kenny-particles.json");
+
+        //sound
+        this.load.audio("jump", "impactGeneric_light_004.ogg");
+        this.load.audio("music", "Shwing.m4a");
     }
 
     create() {

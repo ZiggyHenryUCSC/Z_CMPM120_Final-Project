@@ -204,6 +204,11 @@ class Player extends Phaser.Physics.Arcade.Sprite {
             this.body.setOffset(this.bodyOffX, this.bodyOffY);
         }
 
+        //jump sfx
+        if (jumpJustDown) {
+            this.scene.sound.play("jump");
+        }
+
         // Check for a twirl jump
         // ======================
 

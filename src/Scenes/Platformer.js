@@ -366,6 +366,8 @@ class Platformer extends Phaser.Scene {
         });
 
         this.physics.add.overlap(my.sprite.player, this.finishGroup, (obj1, obj2) => {
+            this.music.stop();
+
             this.scene.start('thanksScene');
         });
 
@@ -570,6 +572,10 @@ class Platformer extends Phaser.Scene {
         this.coinUI.setDepth(50);
 
         this.coinCount = 0;
+
+        //sound
+        this.music = this.sound.add("music", { loop: true });
+        this.music.play();
     }
 
     update(time, delta) {
@@ -646,6 +652,7 @@ class Platformer extends Phaser.Scene {
         this.canDie = false;
         my.sprite.player.isRespawning = true;
         my.sprite.player.setVelocity(0, 0);
+        my.sprite.player.isDash = false;
 
         this.cameras.main.fadeOut(300, 0, 0, 0);
 
